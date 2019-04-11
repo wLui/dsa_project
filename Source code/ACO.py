@@ -19,7 +19,7 @@ with open("data.csv", 'r') as f:
         dest_num += 1
 # parameters
 ant_num = 20
-alpha = 1
+alpha = 2
 beta = 1
 rho = 0.95
 Q = 100
@@ -35,7 +35,7 @@ phe = np.ones((dest_num, dest_num))  # Pheromones chart
 # traveled chart, -1 means not traveled yet
 traveled = np.zeros((ant_num, dest_num))-1
 
-iteration = 200
+iteration = 50
 best_route = np.zeros((iteration, dest_num))
 best_dis = np.zeros((iteration))
 avg_dis = np.zeros((iteration))
@@ -103,11 +103,20 @@ for n in range(iteration):
 # reorganize the last best_route for plot
 plot_route_x = np.zeros((dest_num - 1, 2))
 plot_route_y = np.zeros((dest_num - 1, 2))
+
+best_iter = np.where(best_dis == np.min(best_dis))
+#print(best_iter)
+best_iter = best_iter[0][0].item()  #find the best iteration whose best_dis is the shortest
+
 for i in range(dest_num - 1):
-    plot_route_x[i][0] = dest_x[int(best_route[iteration - 1][i])]
-    plot_route_x[i][1] = dest_x[int(best_route[iteration - 1][i + 1])]
-    plot_route_y[i][0] = dest_y[int(best_route[iteration - 1][i])]
-    plot_route_y[i][1] = dest_y[int(best_route[iteration - 1][i+1])]
+    #plot_route_x[i][0] = dest_x[int(best_route[iteration - 1][i])]
+    #plot_route_x[i][1] = dest_x[int(best_route[iteration - 1][i + 1])]
+    #plot_route_y[i][0] = dest_y[int(best_route[iteration - 1][i])]
+    #plot_route_y[i][1] = dest_y[int(best_route[iteration - 1][i + 1])]
+    plot_route_x[i][0] = dest_x[int(best_route[best_iter][i])]
+    plot_route_x[i][1] = dest_x[int(best_route[best_iter][i + 1])]
+    plot_route_y[i][0] = dest_y[int(best_route[best_iter][i])]
+    plot_route_y[i][1] = dest_y[int(best_route[best_iter][i + 1])]
 
 
 x = np.arange(iteration)
