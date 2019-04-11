@@ -1,0 +1,36 @@
+Main design:
+	the probability for an ant traveling from one destination to another destination is main decided by two factors: the pheromones and the distance between these two dests
+	after traveling, the ant will leave pheromones on the route it traveled
+	repeat these process, the pheromones on every route are different so that it can have great influence in leading the ant to the shortest route.
+
+Detailed process:
+1. Read data from a csv file
+The format of csv file is :
+1st line: x,y
+after the 1st line: the x coordinate value, the y coordinate value
+2. x value and y value is stored in two separated arrays, dest_x, dest_y
+3. some metrics:
+	dis[i][j]: The distance between the destination [i] and destination [j]
+phe[i][j]: The pheromones in the route between the destination [i] and destination [j]
+	traveled[i][j]: The chart records the traveling process of every ant, the ant[i] has been     to the dest[j]
+4. iterations:
+	1.put every ant in a random dest, record this dest in the traveled chart
+	2.creat a new array not_traveled[j], record the dest that this ant hasn’t been to, the size of the array is the num_of_dest - num_of_traveled
+	3.calculate the probability for this ant traveling to every not_travled dest in the next loop
+	prob=prob[k] = (phe[now][next]^alpha) *((1/dis[now][next])^beta)
+	alpha and beta are parameters 
+	4.using the probability and random number to decide which dest to go then
+	for example:
+		prob to dest 0,1, 2 is 0.3, 0.2, 0.5
+cumsum the prob 0, 1, 2 will be 0.3, 0.5, 1
+create a random number between 0 and 1
+if random=0.4123, cumsum[0]<0.4123<cumsum[1], so the ant goes to dest 1
+
+5. repeat this process until every ant has traveled all the dests
+	6. increase the pheromones based on the finished traveled charted and the total distance this ant traveled, if the total distance is shorter, this ant can leave more pheromones
+		phe_delta=Q/total_dis
+		phe=rho*phe + phe_delta
+		Q and rho are parameters
+	7. clear the traveled chart and repeated again
+5. record the best route in the last iteration and plot
+
